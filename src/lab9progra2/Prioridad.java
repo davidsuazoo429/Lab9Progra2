@@ -10,10 +10,10 @@ package lab9progra2;
  * @author David Suazo Palao
  */
 public enum Prioridad {
-    BAJA(1, "BAJ", "BAJA", "#2E7D32"),        // 🟢 Verde
-    NORMAL(2, "NOR", "NORMAL", "#C68A00"),    // 🟡 Amarillo / Dorado
-    ALTA(3, "ALT", "ALTA", "#E65100"),        // 🟠 Naranja
-    URGENTE(4, "URG", "URGENTE", "#D32F2F");  // 🔴 Rojo
+    BAJA(1, "BAJ", "BAJA", "#2E7D32"),        
+    NORMAL(2, "NOR", "NORMAL", "#C68A00"),    
+    ALTA(3, "ALT", "ALTA", "#E65100"),       
+    URGENTE(4, "URG", "URGENTE", "#D32F2F");  
 
     private final int valor;
     private final String tag;

@@ -26,9 +26,9 @@ public class VentanaPrincipal extends JFrame {
     private static final Color COLOR_BORDE = new Color(226, 232, 240);
     private static final Color COLOR_TEXTO_TITULO = new Color(30, 41, 59);
 
-    private final Cola colaRecepcion = new Cola("Recepción", 10);
-    private final Cola colaAlmacen = new Cola("Almacén", 20);
-    private final Cola colaClasificacion = new Cola("Clasificación", 10);
+    private final Cola colaRecepcion = new Cola("Recepcion", 10);
+    private final Cola colaAlmacen = new Cola("Almacen", 20);
+    private final Cola colaClasificacion = new Cola("Clasificacion", 10);
     private final Cola colaEmpaquetado = new Cola("Empaquetado", 8);
     private final Cola[] colasExpedicion = new Cola[]{
             new Cola("Ruta 1", 10),
@@ -59,7 +59,7 @@ public class VentanaPrincipal extends JFrame {
     private Timer timer;
 
     public VentanaPrincipal() {
-        super("Centro de Distribución y Paquetería");
+        super("Centro de Distribucion y Paqueteria");
         inicializarComponentes();
         configurarEventos();
         setSize(1180, 920);
@@ -118,7 +118,7 @@ public class VentanaPrincipal extends JFrame {
         pnlHeader.setBackground(COLOR_HEADER);
         pnlHeader.setBorder(new EmptyBorder(12, 20, 12, 20));
 
-        JLabel lblAppTitle = new JLabel("CENTRO DE DISTRIBUCIÓN Y PAQUETERÍA");
+        JLabel lblAppTitle = new JLabel("CENTRO DE DISTRIBUCION Y PAQUETERIA");
         lblAppTitle.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lblAppTitle.setForeground(Color.WHITE);
         pnlHeader.add(lblAppTitle, BorderLayout.WEST);
@@ -126,12 +126,12 @@ public class VentanaPrincipal extends JFrame {
         JPanel pnlBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         pnlBotones.setOpaque(false);
 
-        btnIniciar = crearBotonModerno("Iniciar", new Color(16, 185, 129));      // Verde
-        btnPausar = crearBotonModerno("Pausar", new Color(245, 158, 11));       // Ámbar
-        btnReanudar = crearBotonModerno("Reanudar", new Color(6, 182, 212));    // Cian
-        btnDetener = crearBotonModerno("Detener", new Color(239, 68, 68));      // Rojo
-        btnReiniciar = crearBotonModerno("Reiniciar", new Color(99, 102, 241)); // Índigo
-        btnStats = crearBotonModerno("Estadísticas", new Color(71, 85, 105));   // Slate
+        btnIniciar = crearBotonModerno("Iniciar", new Color(16, 185, 129));      
+        btnPausar = crearBotonModerno("Pausar", new Color(245, 158, 11));       
+        btnReanudar = crearBotonModerno("Reanudar", new Color(6, 182, 212));    
+        btnDetener = crearBotonModerno("Detener", new Color(239, 68, 68));      
+        btnReiniciar = crearBotonModerno("Reiniciar", new Color(99, 102, 241)); 
+        btnStats = crearBotonModerno("Estadisticas", new Color(71, 85, 105));   
 
         btnPausar.setEnabled(false);
         btnReanudar.setEnabled(false);
@@ -153,7 +153,7 @@ public class VentanaPrincipal extends JFrame {
         JPanel pnlFila1 = new JPanel(new GridLayout(1, 3, 10, 10));
         pnlFila1.setOpaque(false);
 
-        JPanel cardRecepcion = crearTarjeta("RECEPCIÓN");
+        JPanel cardRecepcion = crearTarjeta("RECEPCIoN");
         barRecepcion = crearBarraProgreso(10, new Color(59, 130, 246));
         lblRecepcionItems = new JEditorPane();
         lblRecepcionItems.setContentType("text/html");
@@ -162,7 +162,7 @@ public class VentanaPrincipal extends JFrame {
         cardRecepcion.add(barRecepcion, BorderLayout.SOUTH);
         cardRecepcion.add(new JScrollPane(lblRecepcionItems), BorderLayout.CENTER);
 
-        JPanel cardAlmacen = crearTarjeta("ALMACÉN CENTRAL");
+        JPanel cardAlmacen = crearTarjeta("ALMACEN CENTRAL");
         barAlmacen = crearBarraProgreso(20, new Color(139, 92, 246));
         lblAlmacenItems = new JEditorPane();
         lblAlmacenItems.setContentType("text/html");
@@ -171,7 +171,7 @@ public class VentanaPrincipal extends JFrame {
         cardAlmacen.add(barAlmacen, BorderLayout.SOUTH);
         cardAlmacen.add(new JScrollPane(lblAlmacenItems), BorderLayout.CENTER);
 
-        JPanel cardClasificacion = crearTarjeta("CLASIFICACIÓN (3 Operarios)");
+        JPanel cardClasificacion = crearTarjeta("CLASIFICACION (3 Operarios)");
         lblClasificacionStatus = new JTextArea(4, 15);
         lblClasificacionStatus.setEditable(false);
         lblClasificacionStatus.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -185,7 +185,7 @@ public class VentanaPrincipal extends JFrame {
         pnlFila1.add(cardClasificacion);
         pnlCentro.add(pnlFila1);
 
-        JPanel cardEmpaquetado = crearTarjeta("ÁREA DE EMPAQUETADO (Velocidad según peso)");
+        JPanel cardEmpaquetado = crearTarjeta("AREA DE EMPAQUETADO (Velocidad según peso)");
         barEmpaquetado = crearBarraProgreso(8, new Color(236, 72, 153));
         lblEmpaquetadoStatus = new JTextArea(2, 20);
         lblEmpaquetadoStatus.setEditable(false);
@@ -197,7 +197,7 @@ public class VentanaPrincipal extends JFrame {
         cardEmpaquetado.add(new JScrollPane(lblEmpaquetadoStatus), BorderLayout.CENTER);
         pnlCentro.add(cardEmpaquetado);
 
-        JPanel cardExpedicion = crearTarjeta("EXPEDICIÓN Y SALIDA POR RUTAS");
+        JPanel cardExpedicion = crearTarjeta("EXPEDICION Y SALIDA POR RUTAS");
         JPanel pnlRutasGrid = new JPanel(new GridLayout(1, 4, 8, 8));
         pnlRutasGrid.setOpaque(false);
         lblExpedicionRutas = new JEditorPane[4];
@@ -307,14 +307,14 @@ public class VentanaPrincipal extends JFrame {
             ctrl.pausar();
             btnPausar.setEnabled(false);
             btnReanudar.setEnabled(true);
-            logger.log(">>> SIMULACIÓN PAUSADA <<<");
+            logger.log(">>> SIMULACION PAUSADA <<<");
         });
 
         btnReanudar.addActionListener(e -> {
             ctrl.reanudar();
             btnPausar.setEnabled(true);
             btnReanudar.setEnabled(false);
-            logger.log(">>> SIMULACIÓN REANUDADA <<<");
+            logger.log(">>> SIMULACION REANUDADA <<<");
         });
 
         btnDetener.addActionListener(e -> {
@@ -324,7 +324,7 @@ public class VentanaPrincipal extends JFrame {
             btnReanudar.setEnabled(false);
             btnDetener.setEnabled(false);
             btnReiniciar.setEnabled(true);
-            logger.log(">>> SIMULACIÓN DETENIDA <<<");
+            logger.log(">>> SIMULACION DETENIDA <<<");
         });
 
         btnReiniciar.addActionListener(e -> {
@@ -480,7 +480,7 @@ public class VentanaPrincipal extends JFrame {
                 ? (double) stats.getTiempoTotalMs() / (entregados * 1000.0)
                 : 0.0;
 
-        JDialog dialog = new JDialog(this, "Estadísticas del Sistema", true);
+        JDialog dialog = new JDialog(this, "Estadisticas del Sistema", true);
         dialog.setSize(520, 600);
         dialog.setLocationRelativeTo(this);
         dialog.setLayout(new BorderLayout());
@@ -490,11 +490,11 @@ public class VentanaPrincipal extends JFrame {
         pnlHeaderModal.setBackground(new Color(15, 23, 42));
         pnlHeaderModal.setBorder(new EmptyBorder(15, 20, 15, 20));
 
-        JLabel lblTituloModal = new JLabel("PANEL DE RENDIMIENTO LOGÍSTICO");
+        JLabel lblTituloModal = new JLabel("PANEL DE RENDIMIENTO LOGISTICO");
         lblTituloModal.setFont(new Font("Segoe UI", Font.BOLD, 15));
         lblTituloModal.setForeground(Color.WHITE);
 
-        JLabel lblSubModal = new JLabel("Métricas operativas del centro de distribución");
+        JLabel lblSubModal = new JLabel("Metricas operativas del centro de distribucion");
         lblSubModal.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         lblSubModal.setForeground(new Color(148, 163, 184));
 

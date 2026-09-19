@@ -97,7 +97,7 @@ public class Cola {
 
         if (actual != null) {
             sb.append("<div align='center' style='color:#64748B; font-size:10px; margin-top:2px;'><b>+ ")
-              .append(lista.getTamanio() - count).append(" paquetes más en espera</b></div>");
+              .append(lista.getTamanio() - count).append(" paquetes mas en espera</b></div>");
         }
 
         sb.append("</body></html>");

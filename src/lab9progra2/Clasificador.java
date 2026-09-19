@@ -44,14 +44,14 @@ public class Clasificador extends Thread {
                     Thread.sleep(3500);
 
                     switch (p.getCiudad()) {
-                        case "Barcelona Centro":
+                        case "Barcelona ":
                         case "Eixample":
                             p.setRutaAsignada("Ruta 1");
                             break;
-                        case "Gràcia":
+                        case "Chicago":
                             p.setRutaAsignada("Ruta 2");
                             break;
-                        case "Sant Martí":
+                        case "Seoul ":
                             p.setRutaAsignada("Ruta 3");
                             break;
                         default:

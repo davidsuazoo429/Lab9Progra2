@@ -19,8 +19,8 @@ public class Recepcion extends Thread {
     private int contador = 100;
     private final Random rand = new Random();
 
-    private final String[] CLIENTES = {"Carlos López", "Ana Gómez", "Pedro Martínez", "Lucía Fernández", "Elena Ramos", "David Silva"};
-    private final String[] CIUDADES = {"Barcelona Centro", "Eixample", "Gràcia", "Sant Martí", "Badalona"};
+    private final String[] CLIENTES = {"David Suazo", "Ian Suazo", "Diego Lopez", "Eick Amaya ", "Maria Ramos", "Olivia Rodrigo"};
+    private final String[] CIUDADES = {"Barcelona ", "Chicago", "Seoul", " Kyoto", "Nueva York"};
     private final Prioridad[] PRIORIDADES = Prioridad.values();
 
     public Recepcion(Cola colaRecepcion, Control ctrl, Logger logger, Stats stats) {
