@@ -67,11 +67,14 @@ public class Repartidor extends Thread{
                     }
                 }
 
-                Thread.sleep(800);
+                // ⏱️ Tiempo cargando la furgoneta (2 segundos)
+                Thread.sleep(2000);
 
                 estado = EstadoRepartidor.EN_RUTA;
                 logger.log("🚚 " + nombre + " sale a reparto con " + cargados.getTamanio() + " paquetes [" + ruta + "]");
-                Thread.sleep(2000);
+                
+                // ⏱️ Tiempo de viaje (4 segundos)
+                Thread.sleep(4000);
 
                 while (!cargados.estaVacia() && ctrl.isEjecutando()) {
                     ctrl.verificarPausa();
@@ -79,9 +82,9 @@ public class Repartidor extends Thread{
                     Paquete p = cargados.eliminarPrimero();
                     p.setEstado(EstadoPaquete.EN_REPARTO);
 
-                    Thread.sleep(1500);
+                    // ⏱️ Tiempo entregando paquete al cliente (3.5 segundos)
+                    Thread.sleep(3500);
 
-                    // 20% probabilidad de cliente ausente
                     boolean ausente = rand.nextDouble() < 0.20;
 
                     if (!ausente) {
@@ -104,7 +107,8 @@ public class Repartidor extends Thread{
                 }
 
                 estado = EstadoRepartidor.REGRESANDO;
-                Thread.sleep(1500);
+                // ⏱️ Tiempo de regreso al almacén (3 segundos)
+                Thread.sleep(3000);
 
             } catch (InterruptedException e) {
                 break;

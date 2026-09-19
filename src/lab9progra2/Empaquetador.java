@@ -40,11 +40,12 @@ public class Empaquetador extends Thread{
                     p.setEstado(EstadoPaquete.EMPAQUETANDO);
                     estadoActual = "Empaquetando " + p.getCodigo();
 
-                    long tiempoMs = (p.getPeso() <= 2.0) ? 1000 : (p.getPeso() <= 5.0 ? 2000 : 3000);
+                    // ⏱️ Tiempos pausados según peso: ≤2kg: 3s | 2-5kg: 4.5s | >5kg: 6s
+                    long tiempoMs = (p.getPeso() <= 2.0) ? 3000 : (p.getPeso() <= 5.0 ? 4500 : 6000);
                     Thread.sleep(tiempoMs);
 
                     p.setEstado(EstadoPaquete.EMPAQUETADO);
-                    logger.log(p.getCodigo() + " empaquetado por Empaquetador-" + id + " (" + (tiempoMs / 1000) + "s)");
+                    logger.log(p.getCodigo() + " empaquetado por Empaquetador-" + id + " (" + (tiempoMs / 1000.0) + "s)");
 
                     int idxRuta = 0;
                     if (p.getRutaAsignada().endsWith("2")) idxRuta = 1;

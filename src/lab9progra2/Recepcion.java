@@ -35,7 +35,8 @@ public class Recepcion extends Thread {
         while (ctrl.isEjecutando()) {
             try {
                 ctrl.verificarPausa();
-                Thread.sleep(1500 + rand.nextInt(1500));
+                // ⏱️ Espera entre 5 y 8 segundos para generar el siguiente paquete
+                Thread.sleep(5000 + rand.nextInt(3000));
                 ctrl.verificarPausa();
 
                 String cod = "PKG-" + (++contador);
