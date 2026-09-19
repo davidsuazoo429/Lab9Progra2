@@ -41,8 +41,7 @@ public class Clasificador extends Thread {
                     estadoActual = "Procesando " + p.getCodigo();
                     logger.log(p.getCodigo() + " tomado por Clasificador-" + id);
                     
-                    // ⏱️ 2 segundos de clasificación
-                    Thread.sleep(2000);
+                    Thread.sleep(3500);
 
                     switch (p.getCiudad()) {
                         case "Barcelona Centro":

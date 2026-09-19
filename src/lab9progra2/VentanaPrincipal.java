@@ -482,7 +482,7 @@ public class VentanaPrincipal extends JFrame {
 
         StringBuilder sb = new StringBuilder();
         sb.append("=========================================\n");
-        sb.append("      PANEL DE RENDIMIENTO LOGÍSTICO     \n");
+        sb.append("      PANEL DE RENDIMIENTO LOGISTICO     \n");
         sb.append("=========================================\n\n");
         sb.append(String.format("  - Paquetes Totales Recibidos:  %d\n", generados));
         sb.append(String.format("  - Entregas Completadas:        %d\n", entregados));
