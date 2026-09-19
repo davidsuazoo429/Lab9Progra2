@@ -35,7 +35,6 @@ public class Recepcion extends Thread {
         while (ctrl.isEjecutando()) {
             try {
                 ctrl.verificarPausa();
-                // ⏱️ Espera entre 5 y 8 segundos para generar el siguiente paquete
                 Thread.sleep(5000 + rand.nextInt(3000));
                 ctrl.verificarPausa();
 
@@ -50,7 +49,7 @@ public class Recepcion extends Thread {
                 colaRecepcion.encolar(p, ctrl);
 
                 stats.registrarGenerado();
-                logger.log(p.getCodigo() + " recibido (" + p.getPrioridad().name() + ", " + p.getPeso() + "kg, Destino: " + p.getCiudad() + ")");
+                logger.log(p.getCodigo() + " recibido [" + p.getPrioridad().getNombre() + "] (" + p.getPeso() + "kg, Destino: " + p.getCiudad() + ")");
             } catch (InterruptedException e) {
                 break;
             }

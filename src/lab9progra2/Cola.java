@@ -19,13 +19,13 @@ public class Cola {
         this.capacidadMaxima = capacidadMaxima;
     }
 
+    // Inserción ordenada por prioridad estricta
     public synchronized void encolar(Paquete p, Control ctrl) throws InterruptedException {
         while (lista.getTamanio() >= capacidadMaxima && ctrl.isEjecutando()) {
             wait();
         }
         if (!ctrl.isEjecutando()) return;
 
-        // Inserción por prioridad
         if (lista.estaVacia()) {
             lista.agregar(p);
         } else {
@@ -66,22 +66,45 @@ public class Cola {
         return capacidadMaxima;
     }
 
-    public synchronized String getResumenTexto(int maxElementos) {
+    // Genera bloques con fondo de color real (HTML compatible con Java Swing)
+    public synchronized String getResumenHtml(int maxElementos) {
         StringBuilder sb = new StringBuilder();
+        sb.append("<html><body style='margin:2px; font-family:sans-serif;'>");
+        sb.append("<table cellspacing='3' cellpadding='3'>");
+
         Nodo<Paquete> actual = lista.cabeza;
         int count = 0;
         while (actual != null && count < maxElementos) {
-            sb.append("[").append(actual.dato.getCodigo())
-              .append(" ").append(actual.dato.getPrioridad().getIcono())
-              .append("] ");
-            if ((count + 1) % 3 == 0) sb.append("\n");
-            actual = actual.siguiente;
+            if (count % 2 == 0) sb.append("<tr>");
+
+            Paquete p = actual.dato;
+            String color = p.getPrioridad().getColorHex();
+            String textoColor = (p.getPrioridad() == Prioridad.NORMAL) ? "#000000" : "#FFFFFF";
+
+            sb.append("<td bgcolor='").append(color).append("' align='center'>")
+              .append("<font color='").append(textoColor).append("' size='2'><b> ")
+              .append(p.getCodigo()).append(" [").append(p.getPrioridad().getTag()).append("] ")
+              .append("</b></font></td>");
+
             count++;
+            if (count % 2 == 0) sb.append("</tr>");
+            actual = actual.siguiente;
         }
+
+        if (count % 2 != 0) sb.append("<td></td></tr>");
+        sb.append("</table>");
+
         if (actual != null) {
-            sb.append("... (+").append(lista.getTamanio() - count).append(" más)");
+            sb.append("<div style='color:#666666; font-size:9px;'><i>+(")
+              .append(lista.getTamanio() - count).append(" más en cola)</i></div>");
         }
+
+        sb.append("</body></html>");
         return sb.toString();
+    }
+
+    public synchronized String getResumenTexto(int maxElementos) {
+        return getResumenHtml(maxElementos);
     }
 
     public synchronized void limpiar() {

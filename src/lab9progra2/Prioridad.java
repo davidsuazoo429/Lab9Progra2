@@ -10,19 +10,25 @@ package lab9progra2;
  * @author David Suazo Palao
  */
 public enum Prioridad {
-    BAJA(1, "🟢"),
-    NORMAL(2, "🟡"),
-    ALTA(3, "🟠"),
-    URGENTE(4, "🔴");
+    BAJA(1, "BAJ", "BAJA", "#2E7D32"),        // 🟢 Verde
+    NORMAL(2, "NOR", "NORMAL", "#C68A00"),    // 🟡 Amarillo / Dorado
+    ALTA(3, "ALT", "ALTA", "#E65100"),        // 🟠 Naranja
+    URGENTE(4, "URG", "URGENTE", "#D32F2F");  // 🔴 Rojo
 
     private final int valor;
-    private final String icono;
+    private final String tag;
+    private final String nombre;
+    private final String colorHex;
 
-    Prioridad(int valor, String icono) {
+    Prioridad(int valor, String tag, String nombre, String colorHex) {
         this.valor = valor;
-        this.icono = icono;
+        this.tag = tag;
+        this.nombre = nombre;
+        this.colorHex = colorHex;
     }
 
     public int getValor() { return valor; }
-    public String getIcono() { return icono; }
+    public String getTag() { return tag; }
+    public String getNombre() { return nombre; }
+    public String getColorHex() { return colorHex; }
 }
