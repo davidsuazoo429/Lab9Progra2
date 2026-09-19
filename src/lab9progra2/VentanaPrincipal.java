@@ -31,10 +31,10 @@ public class VentanaPrincipal extends JFrame {
     private final Cola colaClasificacion = new Cola("Clasificacion", 10);
     private final Cola colaEmpaquetado = new Cola("Empaquetado", 8);
     private final Cola[] colasExpedicion = new Cola[]{
-            new Cola("Ruta 1", 10),
-            new Cola("Ruta 2", 10),
-            new Cola("Ruta 3", 10),
-            new Cola("Ruta 4", 10)
+            new Cola("Ruta  1", 10),
+            new Cola("Ruta  2", 10),
+            new Cola("Ruta  3", 10),
+            new Cola("Ruta  4", 10)
     };
 
     private final Control ctrl = new Control();
@@ -153,7 +153,7 @@ public class VentanaPrincipal extends JFrame {
         JPanel pnlFila1 = new JPanel(new GridLayout(1, 3, 10, 10));
         pnlFila1.setOpaque(false);
 
-        JPanel cardRecepcion = crearTarjeta("RECEPCIoN");
+        JPanel cardRecepcion = crearTarjeta("RECEPCION");
         barRecepcion = crearBarraProgreso(10, new Color(59, 130, 246));
         lblRecepcionItems = new JEditorPane();
         lblRecepcionItems.setContentType("text/html");
@@ -300,21 +300,21 @@ public class VentanaPrincipal extends JFrame {
             btnPausar.setEnabled(true);
             btnDetener.setEnabled(true);
             btnReiniciar.setEnabled(false);
-            logger.log(">>> SISTEMA INICIADO - INICIANDO PROCESAMIENTO <<<");
+            logger.log("> SISTEMA INICIADO - INICIANDO PROCESAMIENTO <");
         });
 
         btnPausar.addActionListener(e -> {
             ctrl.pausar();
             btnPausar.setEnabled(false);
             btnReanudar.setEnabled(true);
-            logger.log(">>> SIMULACION PAUSADA <<<");
+            logger.log("> SIMULACION PAUSADA <");
         });
 
         btnReanudar.addActionListener(e -> {
             ctrl.reanudar();
             btnPausar.setEnabled(true);
             btnReanudar.setEnabled(false);
-            logger.log(">>> SIMULACION REANUDADA <<<");
+            logger.log("> SIMULACION REANUDADA <");
         });
 
         btnDetener.addActionListener(e -> {
@@ -324,7 +324,7 @@ public class VentanaPrincipal extends JFrame {
             btnReanudar.setEnabled(false);
             btnDetener.setEnabled(false);
             btnReiniciar.setEnabled(true);
-            logger.log(">>> SIMULACION DETENIDA <<<");
+            logger.log("> SIMULACION DETENIDA <");
         });
 
         btnReiniciar.addActionListener(e -> {
@@ -332,7 +332,7 @@ public class VentanaPrincipal extends JFrame {
             limpiarEstructuras();
             stats.reiniciar();
             txtLog.setText("");
-            logger.log(">>> SISTEMA REINICIADO - MEMORIA LIMPIA <<<");
+            logger.log("> SISTEMA REINICIADO - MEMORIA LIMPIA <");
             btnIniciar.setEnabled(true);
             btnReiniciar.setEnabled(true);
         });
@@ -421,7 +421,7 @@ public class VentanaPrincipal extends JFrame {
             StringBuilder sbE = new StringBuilder();
             for (int i = 0; i < empaquetadores.length; i++) {
                 if (empaquetadores[i] != null) {
-                    sbE.append(" - Empaquetador ").append(i + 1).append(": ")
+                    sbE.append("  Empaquetador ").append(i + 1).append(": ")
                        .append(empaquetadores[i].getEstadoActual()).append("\n");
                 }
             }

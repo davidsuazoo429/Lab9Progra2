@@ -60,7 +60,7 @@ public class Clasificador extends Thread {
                     }
 
                     p.setEstado(EstadoPaquete.CLASIFICADO);
-                    logger.log(p.getCodigo() + " clasificado → " + p.getRutaAsignada());
+                    logger.log(p.getCodigo() + " clasificado  → " + p.getRutaAsignada());
                     empaquetado.encolar(p, ctrl);
                     estadoActual = "Libre";
                 }

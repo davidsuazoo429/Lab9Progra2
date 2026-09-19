@@ -10,6 +10,7 @@ package lab9progra2;
  * @author David Suazo Palao
  */
 import java.util.Random;
+
 public class Repartidor extends Thread{
     private final int id;
     private final String nombre;
@@ -25,9 +26,7 @@ public class Repartidor extends Thread{
     private final ListaEnlazada<Paquete> cargados = new ListaEnlazada<>();
     private final Random rand = new Random();
 
-    public Repartidor(int id, String nombre, int capacidadMax, String ruta,
-                      Cola colaExpedicion, Cola colaReingresoAlmacen,
-                      Control ctrl, Logger logger, Stats stats) {
+    public Repartidor(int id, String nombre, int capacidadMax, String ruta, Cola colaExpedicion, Cola colaReingresoAlmacen,Control ctrl, Logger logger, Stats stats) {
         this.id = id;
         this.nombre = nombre;
         this.capacidadMax = capacidadMax;
