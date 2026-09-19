@@ -30,29 +30,37 @@ public class Recepcion extends Thread {
         this.stats = stats;
     }
 
+    private void generarUnPaquete() throws InterruptedException {
+        String cod = "PKG-" + (++contador);
+        String cli = CLIENTES[rand.nextInt(CLIENTES.length)];
+        String ciu = CIUDADES[rand.nextInt(CIUDADES.length)];
+        double peso = Math.round((0.5 + rand.nextDouble() * 7.5) * 10.0) / 10.0;
+        Prioridad prio = PRIORIDADES[rand.nextInt(PRIORIDADES.length)];
+
+        Paquete p = new Paquete(cod, cli, "Calle " + (rand.nextInt(100) + 1), ciu, peso, prio);
+        p.setEstado(EstadoPaquete.RECIBIDO);
+        colaRecepcion.encolar(p, ctrl);
+
+        stats.registrarGenerado();
+        logger.log(p.getCodigo() + " recibido [" + p.getPrioridad().getNombre() + "] (" + p.getPeso() + "kg, Destino: " + p.getCiudad() + ")");
+    }
+
     @Override
     public void run() {
-        while (ctrl.isEjecutando()) {
-            try {
-                ctrl.verificarPausa();
-                Thread.sleep(5000 + rand.nextInt(3000));
-                ctrl.verificarPausa();
-
-                String cod = "PKG-" + (++contador);
-                String cli = CLIENTES[rand.nextInt(CLIENTES.length)];
-                String ciu = CIUDADES[rand.nextInt(CIUDADES.length)];
-                double peso = Math.round((0.5 + rand.nextDouble() * 7.5) * 10.0) / 10.0;
-                Prioridad prio = PRIORIDADES[rand.nextInt(PRIORIDADES.length)];
-
-                Paquete p = new Paquete(cod, cli, "Calle " + (rand.nextInt(100) + 1), ciu, peso, prio);
-                p.setEstado(EstadoPaquete.RECIBIDO);
-                colaRecepcion.encolar(p, ctrl);
-
-                stats.registrarGenerado();
-                logger.log(p.getCodigo() + " recibido [" + p.getPrioridad().getNombre() + "] (" + p.getPeso() + "kg, Destino: " + p.getCiudad() + ")");
-            } catch (InterruptedException e) {
-                break;
+        try {
+            for (int i = 0; i < 4 && ctrl.isEjecutando(); i++) {
+                generarUnPaquete();
+                Thread.sleep(300);
             }
+
+            while (ctrl.isEjecutando()) {
+                ctrl.verificarPausa();
+                Thread.sleep(1300 + rand.nextInt(400));
+                ctrl.verificarPausa();
+
+                generarUnPaquete();
+            }
+        } catch (InterruptedException e) {
         }
     }
 }

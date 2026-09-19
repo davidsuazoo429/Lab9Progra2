@@ -29,8 +29,7 @@ public class Almacen extends Thread{
                 ctrl.verificarPausa();
                 Paquete p = recepcion.desencolar(ctrl);
                 if (p != null) {
-                    // ⏱️ Tiempo para mover al almacén (2 segundos)
-                    Thread.sleep(2000);
+                    Thread.sleep(1000);
                     p.setEstado(EstadoPaquete.ALMACENADO);
                     almacen.encolar(p, ctrl);
                     logger.log(p.getCodigo() + " almacenado en bodega central");

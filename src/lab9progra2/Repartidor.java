@@ -39,11 +39,21 @@ public class Repartidor extends Thread{
         this.stats = stats;
     }
 
-    public EstadoRepartidor getEstadoRepartidor() { return estado; }
-    public int getCantidadCargada() { return cargados.getTamanio(); }
-    public int getCapacidadMax() { return capacidadMax; }
-    public String getRuta() { return ruta; }
-    public String getNombre() { return nombre; }
+    public EstadoRepartidor getEstadoRepartidor() {
+        return estado; 
+    }
+    public int getCantidadCargada() {
+        return cargados.getTamanio(); 
+    }
+    public int getCapacidadMax() {
+        return capacidadMax; 
+    }
+    public String getRuta() {
+        return ruta; 
+    }
+    public String getNombre() {
+        return nombre; 
+    }
 
     @Override
     public void run() {
@@ -59,22 +69,21 @@ public class Repartidor extends Thread{
                 cargados.agregar(primerP);
                 logger.log(nombre + " cargando " + primerP.getCodigo());
 
-                while (cargados.getTamanio() < capacidadMax && colaExpedicion.getTamanio() > 0) {
-                    Paquete extra = colaExpedicion.desencolar(ctrl);
-                    if (extra != null) {
-                        cargados.agregar(extra);
-                        logger.log(nombre + " cargando " + extra.getCodigo());
+                for (int i = 0; i < 3; i++) {
+                    Thread.sleep(600);
+                    while (cargados.getTamanio() < capacidadMax && colaExpedicion.getTamanio() > 0) {
+                        Paquete extra = colaExpedicion.desencolar(ctrl);
+                        if (extra != null) {
+                            cargados.agregar(extra);
+                            logger.log(nombre + " cargando " + extra.getCodigo());
+                        }
                     }
                 }
 
-                // ⏱️ Tiempo cargando la furgoneta (2 segundos)
-                Thread.sleep(2000);
-
                 estado = EstadoRepartidor.EN_RUTA;
-                logger.log("🚚 " + nombre + " sale a reparto con " + cargados.getTamanio() + " paquetes [" + ruta + "]");
+                logger.log("[EN RUTA] " + nombre + " sale a reparto con " + cargados.getTamanio() + " paquetes [" + ruta + "]");
                 
-                // ⏱️ Tiempo de viaje (4 segundos)
-                Thread.sleep(4000);
+                Thread.sleep(2500);
 
                 while (!cargados.estaVacia() && ctrl.isEjecutando()) {
                     ctrl.verificarPausa();
@@ -82,8 +91,7 @@ public class Repartidor extends Thread{
                     Paquete p = cargados.eliminarPrimero();
                     p.setEstado(EstadoPaquete.EN_REPARTO);
 
-                    // ⏱️ Tiempo entregando paquete al cliente (3.5 segundos)
-                    Thread.sleep(3500);
+                    Thread.sleep(2000);
 
                     boolean ausente = rand.nextDouble() < 0.20;
 
@@ -91,14 +99,14 @@ public class Repartidor extends Thread{
                         p.setEstado(EstadoPaquete.ENTREGADO);
                         long tiempoMs = System.currentTimeMillis() - p.getTiempoCreacion();
                         stats.registrarEntregado(id, tiempoMs);
-                        logger.log("✅ " + p.getCodigo() + " ENTREGADO por " + nombre);
+                        logger.log("[ENTREGADO] " + p.getCodigo() + " entregado exitosamente por " + nombre);
                     } else {
                         p.incrementarIntentos();
-                        logger.log("⚠️ Intento " + p.getIntentos() + " fallido para " + p.getCodigo() + " (Ausente)");
+                        logger.log("[INTENTO FALLIDO] Intento " + p.getIntentos() + " para " + p.getCodigo() + " (Cliente ausente)");
                         if (p.getIntentos() >= 3) {
                             p.setEstado(EstadoPaquete.DEVUELTO);
                             stats.registrarDevuelto();
-                            logger.log("❌ " + p.getCodigo() + " DEVUELTO (3 intentos fallidos)");
+                            logger.log("[DEVUELTO] " + p.getCodigo() + " devuelto tras 3 intentos");
                         } else {
                             p.setEstado(EstadoPaquete.NUEVO_INTENTO);
                             colaReingresoAlmacen.encolar(p, ctrl);
@@ -107,8 +115,7 @@ public class Repartidor extends Thread{
                 }
 
                 estado = EstadoRepartidor.REGRESANDO;
-                // ⏱️ Tiempo de regreso al almacén (3 segundos)
-                Thread.sleep(3000);
+                Thread.sleep(2000);
 
             } catch (InterruptedException e) {
                 break;

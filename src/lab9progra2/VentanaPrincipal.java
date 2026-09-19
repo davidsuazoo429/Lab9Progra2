@@ -10,6 +10,9 @@ package lab9progra2;
  * @author David Suazo Palao
  */
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -17,6 +20,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class VentanaPrincipal extends JFrame {
+    private static final Color COLOR_FONDO = new Color(241, 245, 249);
+    private static final Color COLOR_HEADER = new Color(15, 23, 42);
+    private static final Color COLOR_CARD = new Color(255, 255, 255);
+    private static final Color COLOR_BORDE = new Color(226, 232, 240);
+    private static final Color COLOR_TEXTO_TITULO = new Color(30, 41, 59);
+
     private final Cola colaRecepcion = new Cola("Recepción", 10);
     private final Cola colaAlmacen = new Cola("Almacén", 20);
     private final Cola colaClasificacion = new Cola("Clasificación", 10);
@@ -40,162 +49,239 @@ public class VentanaPrincipal extends JFrame {
     private JTextArea txtLog;
     private JProgressBar barRecepcion, barAlmacen, barEmpaquetado;
     
-    // Paneles que soportan color HTML
     private JEditorPane lblRecepcionItems, lblAlmacenItems;
     private JTextArea lblClasificacionStatus, lblEmpaquetadoStatus;
     private JEditorPane[] lblExpedicionRutas;
     
     private JPanel[] pnlRepartidores;
-    private JLabel[] lblRepartidorStatus;
+    private JLabel[] lblRepartidorStatus, lblRepartidorSub;
     private JButton btnIniciar, btnPausar, btnReanudar, btnDetener, btnReiniciar, btnStats;
     private Timer timer;
 
     public VentanaPrincipal() {
-        super("📦 Simulador de Logística y Paquetería");
+        super("Centro de Distribución y Paquetería");
         inicializarComponentes();
         configurarEventos();
-        setSize(1100, 850);
+        setSize(1180, 920);
+        setMinimumSize(new Dimension(1050, 850));
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    private JButton crearBotonModerno(String texto, Color bg) {
+        JButton btn = new JButton(texto);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btn.setForeground(Color.WHITE);
+        btn.setBackground(bg);
+        btn.setFocusPainted(false);
+        btn.setBorder(new CompoundBorder(
+                new LineBorder(bg.darker(), 1, true),
+                new EmptyBorder(7, 16, 7, 16)
+        ));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return btn;
+    }
+
+    private JPanel crearTarjeta(String titulo) {
+        JPanel card = new JPanel(new BorderLayout(5, 5));
+        card.setBackground(COLOR_CARD);
+        card.setBorder(new CompoundBorder(
+                new LineBorder(COLOR_BORDE, 1, true),
+                new EmptyBorder(8, 10, 8, 10)
+        ));
+
+        JLabel lblTitulo = new JLabel(titulo);
+        lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblTitulo.setForeground(COLOR_TEXTO_TITULO);
+        lblTitulo.setBorder(new EmptyBorder(0, 0, 5, 0));
+        card.add(lblTitulo, BorderLayout.NORTH);
+
+        return card;
+    }
+
+    private JProgressBar crearBarraProgreso(int max, Color colorBarra) {
+        JProgressBar bar = new JProgressBar(0, max);
+        bar.setStringPainted(true);
+        bar.setFont(new Font("Segoe UI", Font.BOLD, 11));
+        bar.setForeground(colorBarra);
+        bar.setBackground(new Color(241, 245, 249));
+        bar.setBorder(new LineBorder(COLOR_BORDE, 1, true));
+        bar.setPreferredSize(new Dimension(bar.getPreferredSize().width, 20));
+        return bar;
+    }
+
     private void inicializarComponentes() {
-        setLayout(new BorderLayout(5, 5));
+        getContentPane().setBackground(COLOR_FONDO);
+        setLayout(new BorderLayout(10, 10));
 
-        // 1. Barra superior
-        JPanel pnlControl = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
-        pnlControl.setBackground(new Color(236, 240, 241));
-        pnlControl.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.LIGHT_GRAY));
+        JPanel pnlHeader = new JPanel(new BorderLayout());
+        pnlHeader.setBackground(COLOR_HEADER);
+        pnlHeader.setBorder(new EmptyBorder(12, 20, 12, 20));
 
-        btnIniciar = new JButton("▶ Iniciar");
-        btnPausar = new JButton("⏸ Pausar");
-        btnReanudar = new JButton("⏯ Reanudar");
-        btnDetener = new JButton("⏹ Detener");
-        btnReiniciar = new JButton("🔄 Reiniciar");
-        btnStats = new JButton("📊 Estadísticas");
+        JLabel lblAppTitle = new JLabel("CENTRO DE DISTRIBUCIÓN Y PAQUETERÍA");
+        lblAppTitle.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        lblAppTitle.setForeground(Color.WHITE);
+        pnlHeader.add(lblAppTitle, BorderLayout.WEST);
+
+        JPanel pnlBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        pnlBotones.setOpaque(false);
+
+        btnIniciar = crearBotonModerno("Iniciar", new Color(16, 185, 129));      // Verde
+        btnPausar = crearBotonModerno("Pausar", new Color(245, 158, 11));       // Ámbar
+        btnReanudar = crearBotonModerno("Reanudar", new Color(6, 182, 212));    // Cian
+        btnDetener = crearBotonModerno("Detener", new Color(239, 68, 68));      // Rojo
+        btnReiniciar = crearBotonModerno("Reiniciar", new Color(99, 102, 241)); // Índigo
+        btnStats = crearBotonModerno("Estadísticas", new Color(71, 85, 105));   // Slate
 
         btnPausar.setEnabled(false);
         btnReanudar.setEnabled(false);
         btnDetener.setEnabled(false);
 
-        pnlControl.add(btnIniciar);
-        pnlControl.add(btnPausar);
-        pnlControl.add(btnReanudar);
-        pnlControl.add(btnDetener);
-        pnlControl.add(btnReiniciar);
-        pnlControl.add(btnStats);
-        add(pnlControl, BorderLayout.NORTH);
+        pnlBotones.add(btnIniciar);
+        pnlBotones.add(btnPausar);
+        pnlBotones.add(btnReanudar);
+        pnlBotones.add(btnDetener);
+        pnlBotones.add(btnReiniciar);
+        pnlBotones.add(btnStats);
+        pnlHeader.add(pnlBotones, BorderLayout.EAST);
+        add(pnlHeader, BorderLayout.NORTH);
 
-        // 2. Área Central
-        JPanel pnlCentro = new JPanel(new GridLayout(4, 1, 5, 5));
-        pnlCentro.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        JPanel pnlCentro = new JPanel(new GridLayout(4, 1, 10, 10));
+        pnlCentro.setOpaque(false);
+        pnlCentro.setBorder(new EmptyBorder(0, 15, 0, 15));
 
-        // Fila 1: Recepción, Almacén, Clasificación
-        JPanel pnlFila1 = new JPanel(new GridLayout(1, 3, 5, 5));
+        JPanel pnlFila1 = new JPanel(new GridLayout(1, 3, 10, 10));
+        pnlFila1.setOpaque(false);
 
-        // Recepción (HTML con colores)
-        JPanel pRecepcion = new JPanel(new BorderLayout(3, 3));
-        pRecepcion.setBorder(BorderFactory.createTitledBorder("📥 RECEPCIÓN"));
-        barRecepcion = new JProgressBar(0, 10);
-        barRecepcion.setStringPainted(true);
+        JPanel cardRecepcion = crearTarjeta("RECEPCIÓN");
+        barRecepcion = crearBarraProgreso(10, new Color(59, 130, 246));
         lblRecepcionItems = new JEditorPane();
         lblRecepcionItems.setContentType("text/html");
         lblRecepcionItems.setEditable(false);
         lblRecepcionItems.setBackground(Color.WHITE);
-        pRecepcion.add(barRecepcion, BorderLayout.NORTH);
-        pRecepcion.add(new JScrollPane(lblRecepcionItems), BorderLayout.CENTER);
+        cardRecepcion.add(barRecepcion, BorderLayout.SOUTH);
+        cardRecepcion.add(new JScrollPane(lblRecepcionItems), BorderLayout.CENTER);
 
-        // Almacén Central (HTML con colores)
-        JPanel pAlmacen = new JPanel(new BorderLayout(3, 3));
-        pAlmacen.setBorder(BorderFactory.createTitledBorder("🏬 ALMACÉN CENTRAL"));
-        barAlmacen = new JProgressBar(0, 20);
-        barAlmacen.setStringPainted(true);
+        JPanel cardAlmacen = crearTarjeta("ALMACÉN CENTRAL");
+        barAlmacen = crearBarraProgreso(20, new Color(139, 92, 246));
         lblAlmacenItems = new JEditorPane();
         lblAlmacenItems.setContentType("text/html");
         lblAlmacenItems.setEditable(false);
         lblAlmacenItems.setBackground(Color.WHITE);
-        pAlmacen.add(barAlmacen, BorderLayout.NORTH);
-        pAlmacen.add(new JScrollPane(lblAlmacenItems), BorderLayout.CENTER);
+        cardAlmacen.add(barAlmacen, BorderLayout.SOUTH);
+        cardAlmacen.add(new JScrollPane(lblAlmacenItems), BorderLayout.CENTER);
 
-        // Clasificación
-        JPanel pClasificacion = new JPanel(new BorderLayout(3, 3));
-        pClasificacion.setBorder(BorderFactory.createTitledBorder("🏷️ CLASIFICACIÓN (3 Clasificadores)"));
+        JPanel cardClasificacion = crearTarjeta("CLASIFICACIÓN (3 Operarios)");
         lblClasificacionStatus = new JTextArea(4, 15);
         lblClasificacionStatus.setEditable(false);
-        lblClasificacionStatus.setFont(new Font("Monospaced", Font.BOLD, 11));
-        pClasificacion.add(new JScrollPane(lblClasificacionStatus), BorderLayout.CENTER);
+        lblClasificacionStatus.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        lblClasificacionStatus.setForeground(new Color(51, 65, 85));
+        lblClasificacionStatus.setBackground(new Color(248, 250, 252));
+        lblClasificacionStatus.setBorder(new EmptyBorder(5, 8, 5, 8));
+        cardClasificacion.add(new JScrollPane(lblClasificacionStatus), BorderLayout.CENTER);
 
-        pnlFila1.add(pRecepcion);
-        pnlFila1.add(pAlmacen);
-        pnlFila1.add(pClasificacion);
+        pnlFila1.add(cardRecepcion);
+        pnlFila1.add(cardAlmacen);
+        pnlFila1.add(cardClasificacion);
         pnlCentro.add(pnlFila1);
 
-        // Fila 2: Empaquetado
-        JPanel pnlFila2 = new JPanel(new BorderLayout(3, 3));
-        pnlFila2.setBorder(BorderFactory.createTitledBorder("📦 EMPAQUETADO (2 Empaquetadores)"));
-        barEmpaquetado = new JProgressBar(0, 8);
-        barEmpaquetado.setStringPainted(true);
-        lblEmpaquetadoStatus = new JTextArea(3, 20);
+        JPanel cardEmpaquetado = crearTarjeta("ÁREA DE EMPAQUETADO (Velocidad según peso)");
+        barEmpaquetado = crearBarraProgreso(8, new Color(236, 72, 153));
+        lblEmpaquetadoStatus = new JTextArea(2, 20);
         lblEmpaquetadoStatus.setEditable(false);
-        lblEmpaquetadoStatus.setFont(new Font("Monospaced", Font.BOLD, 11));
-        pnlFila2.add(barEmpaquetado, BorderLayout.NORTH);
-        pnlFila2.add(new JScrollPane(lblEmpaquetadoStatus), BorderLayout.CENTER);
-        pnlCentro.add(pnlFila2);
+        lblEmpaquetadoStatus.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        lblEmpaquetadoStatus.setForeground(new Color(51, 65, 85));
+        lblEmpaquetadoStatus.setBackground(new Color(248, 250, 252));
+        lblEmpaquetadoStatus.setBorder(new EmptyBorder(5, 8, 5, 8));
+        cardEmpaquetado.add(barEmpaquetado, BorderLayout.SOUTH);
+        cardEmpaquetado.add(new JScrollPane(lblEmpaquetadoStatus), BorderLayout.CENTER);
+        pnlCentro.add(cardEmpaquetado);
 
-        // Fila 3: Expedición (HTML con colores en cada ruta)
-        JPanel pnlFila3 = new JPanel(new GridLayout(1, 4, 5, 5));
-        pnlFila3.setBorder(BorderFactory.createTitledBorder("🚚 EXPEDICIÓN (Por rutas)"));
+        JPanel cardExpedicion = crearTarjeta("EXPEDICIÓN Y SALIDA POR RUTAS");
+        JPanel pnlRutasGrid = new JPanel(new GridLayout(1, 4, 8, 8));
+        pnlRutasGrid.setOpaque(false);
         lblExpedicionRutas = new JEditorPane[4];
+
         for (int i = 0; i < 4; i++) {
-            JPanel pRuta = new JPanel(new BorderLayout());
-            pRuta.setBorder(BorderFactory.createTitledBorder("Ruta " + (i + 1)));
+            JPanel pRutaBox = new JPanel(new BorderLayout());
+            pRutaBox.setBackground(Color.WHITE);
+            pRutaBox.setBorder(new CompoundBorder(
+                    new LineBorder(COLOR_BORDE, 1, true),
+                    new EmptyBorder(4, 6, 4, 6)
+            ));
+
+            JLabel lblRutaName = new JLabel("Ruta " + (i + 1), JLabel.CENTER);
+            lblRutaName.setFont(new Font("Segoe UI", Font.BOLD, 11));
+            lblRutaName.setForeground(new Color(79, 70, 229));
+
             lblExpedicionRutas[i] = new JEditorPane();
             lblExpedicionRutas[i].setContentType("text/html");
             lblExpedicionRutas[i].setEditable(false);
             lblExpedicionRutas[i].setBackground(Color.WHITE);
-            pRuta.add(new JScrollPane(lblExpedicionRutas[i]), BorderLayout.CENTER);
-            pnlFila3.add(pRuta);
-        }
-        pnlCentro.add(pnlFila3);
 
-        // Fila 4: Repartidores
-        JPanel pnlFila4 = new JPanel(new GridLayout(1, 4, 5, 5));
-        pnlFila4.setBorder(BorderFactory.createTitledBorder("🚛 REPARTIDORES"));
+            pRutaBox.add(lblRutaName, BorderLayout.NORTH);
+            pRutaBox.add(new JScrollPane(lblExpedicionRutas[i]), BorderLayout.CENTER);
+            pnlRutasGrid.add(pRutaBox);
+        }
+        cardExpedicion.add(pnlRutasGrid, BorderLayout.CENTER);
+        pnlCentro.add(cardExpedicion);
+
+        JPanel cardReparto = crearTarjeta("FLOTA DE REPARTIDORES EN SERVICIO");
+        JPanel pnlRepartoGrid = new JPanel(new GridLayout(1, 4, 8, 8));
+        pnlRepartoGrid.setOpaque(false);
+
         pnlRepartidores = new JPanel[4];
         lblRepartidorStatus = new JLabel[4];
+        lblRepartidorSub = new JLabel[4];
         int[] capacidades = {5, 4, 6, 5};
+
         for (int i = 0; i < 4; i++) {
-            pnlRepartidores[i] = new JPanel(new GridLayout(3, 1));
-            pnlRepartidores[i].setBorder(BorderFactory.createEtchedBorder());
-            pnlRepartidores[i].setBackground(new Color(245, 245, 245));
-            JLabel lblTitulo = new JLabel("🚚 Repartidor " + (i + 1) + " (Max " + capacidades[i] + ")", JLabel.CENTER);
-            lblTitulo.setFont(new Font("SansSerif", Font.BOLD, 12));
-            lblRepartidorStatus[i] = new JLabel("DISPONIBLE | 0/" + capacidades[i], JLabel.CENTER);
-            JLabel lblRuta = new JLabel("Asignado: Ruta " + (i + 1), JLabel.CENTER);
-            lblRuta.setForeground(Color.DARK_GRAY);
+            pnlRepartidores[i] = new JPanel(new GridLayout(3, 1, 2, 2));
+            pnlRepartidores[i].setBackground(new Color(248, 250, 252));
+            pnlRepartidores[i].setBorder(new CompoundBorder(
+                    new LineBorder(COLOR_BORDE, 1, true),
+                    new EmptyBorder(6, 8, 6, 8)
+            ));
+
+            JLabel lblTitulo = new JLabel("Repartidor " + (i + 1), JLabel.CENTER);
+            lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 13));
+            lblTitulo.setForeground(COLOR_TEXTO_TITULO);
+
+            lblRepartidorStatus[i] = new JLabel("DISPONIBLE", JLabel.CENTER);
+            lblRepartidorStatus[i].setFont(new Font("Segoe UI", Font.BOLD, 12));
+            lblRepartidorStatus[i].setForeground(new Color(16, 185, 129));
+
+            lblRepartidorSub[i] = new JLabel("Carga: 0/" + capacidades[i] + "  |  Ruta " + (i + 1), JLabel.CENTER);
+            lblRepartidorSub[i].setFont(new Font("Segoe UI", Font.PLAIN, 11));
+            lblRepartidorSub[i].setForeground(new Color(100, 116, 139));
 
             pnlRepartidores[i].add(lblTitulo);
             pnlRepartidores[i].add(lblRepartidorStatus[i]);
-            pnlRepartidores[i].add(lblRuta);
-            pnlFila4.add(pnlRepartidores[i]);
+            pnlRepartidores[i].add(lblRepartidorSub[i]);
+            pnlRepartoGrid.add(pnlRepartidores[i]);
         }
-        pnlCentro.add(pnlFila4);
+        cardReparto.add(pnlRepartoGrid, BorderLayout.CENTER);
+        pnlCentro.add(cardReparto);
+
         add(pnlCentro, BorderLayout.CENTER);
 
-        // Panel Log
-        JPanel pnlSur = new JPanel(new BorderLayout());
-        pnlSur.setPreferredSize(new Dimension(1000, 160));
-        pnlSur.setBorder(BorderFactory.createTitledBorder("📝 LOG DEL SISTEMA"));
+        JPanel pnlLogCard = crearTarjeta("REGISTRO DE EVENTOS EN TIEMPO REAL (LOG)");
+        pnlLogCard.setPreferredSize(new Dimension(1000, 160));
+        pnlLogCard.setBorder(new EmptyBorder(0, 15, 12, 15));
+
         txtLog = new JTextArea();
         txtLog.setEditable(false);
-        txtLog.setBackground(new Color(20, 24, 30));
-        txtLog.setForeground(new Color(46, 204, 113));
-        txtLog.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        JScrollPane scrollLog = new JScrollPane(txtLog);
-        pnlSur.add(scrollLog, BorderLayout.CENTER);
-        add(pnlSur, BorderLayout.SOUTH);
+        txtLog.setBackground(new Color(15, 23, 42));
+        txtLog.setForeground(new Color(52, 211, 153));
+        txtLog.setCaretColor(Color.WHITE);
+        txtLog.setFont(new Font("Consolas", Font.PLAIN, 12));
+        txtLog.setBorder(new EmptyBorder(6, 8, 6, 8));
 
-        // Timer de refresco visual
+        JScrollPane scrollLog = new JScrollPane(txtLog);
+        scrollLog.setBorder(new LineBorder(new Color(51, 65, 85), 1, true));
+        pnlLogCard.add(scrollLog, BorderLayout.CENTER);
+        add(pnlLogCard, BorderLayout.SOUTH);
+
         timer = new Timer(200, e -> refrescarGUI());
         timer.start();
     }
@@ -203,7 +289,7 @@ public class VentanaPrincipal extends JFrame {
     private void configurarEventos() {
         Logger logger = mensaje -> SwingUtilities.invokeLater(() -> {
             String hora = new SimpleDateFormat("HH:mm:ss").format(new Date());
-            txtLog.append(hora + " | " + mensaje + "\n");
+            txtLog.append(" [" + hora + "]  " + mensaje + "\n");
             txtLog.setCaretPosition(txtLog.getDocument().getLength());
         });
 
@@ -214,7 +300,7 @@ public class VentanaPrincipal extends JFrame {
             btnPausar.setEnabled(true);
             btnDetener.setEnabled(true);
             btnReiniciar.setEnabled(false);
-            logger.log(">>> SIMULACIÓN INICIADA <<<");
+            logger.log(">>> SISTEMA INICIADO - INICIANDO PROCESAMIENTO <<<");
         });
 
         btnPausar.addActionListener(e -> {
@@ -246,7 +332,7 @@ public class VentanaPrincipal extends JFrame {
             limpiarEstructuras();
             stats.reiniciar();
             txtLog.setText("");
-            logger.log(">>> SISTEMA REINICIADO <<<");
+            logger.log(">>> SISTEMA REINICIADO - MEMORIA LIMPIA <<<");
             btnIniciar.setEnabled(true);
             btnReiniciar.setEnabled(true);
         });
@@ -306,77 +392,78 @@ public class VentanaPrincipal extends JFrame {
     }
 
     private void refrescarGUI() {
-        // Recepción con HTML y colores
         barRecepcion.setValue(colaRecepcion.getTamanio());
-        barRecepcion.setString(colaRecepcion.getTamanio() + " / " + colaRecepcion.getCapacidadMaxima());
+        barRecepcion.setString(colaRecepcion.getTamanio() + " / " + colaRecepcion.getCapacidadMaxima() + " paquetes");
         if (lblRecepcionItems != null) {
             lblRecepcionItems.setText(colaRecepcion.getResumenHtml(8));
         }
 
-        // Almacén con HTML y colores
         barAlmacen.setValue(colaAlmacen.getTamanio());
-        barAlmacen.setString(colaAlmacen.getTamanio() + " / " + colaAlmacen.getCapacidadMaxima());
+        barAlmacen.setString(colaAlmacen.getTamanio() + " / " + colaAlmacen.getCapacidadMaxima() + " paquetes");
         if (lblAlmacenItems != null) {
             lblAlmacenItems.setText(colaAlmacen.getResumenHtml(14));
         }
 
-        // Clasificadores
         if (clasificadores != null) {
             StringBuilder sbC = new StringBuilder();
             for (int i = 0; i < clasificadores.length; i++) {
                 if (clasificadores[i] != null) {
-                    sbC.append("Clasificador ").append(i + 1).append(": ")
+                    sbC.append(" - Clasificador ").append(i + 1).append(": ")
                        .append(clasificadores[i].getEstadoActual()).append("\n");
                 }
             }
             lblClasificacionStatus.setText(sbC.toString());
         }
 
-        // Empaquetado
         barEmpaquetado.setValue(colaEmpaquetado.getTamanio());
-        barEmpaquetado.setString(colaEmpaquetado.getTamanio() + " / " + colaEmpaquetado.getCapacidadMaxima());
+        barEmpaquetado.setString(colaEmpaquetado.getTamanio() + " / " + colaEmpaquetado.getCapacidadMaxima() + " paquetes");
         if (empaquetadores != null) {
             StringBuilder sbE = new StringBuilder();
             for (int i = 0; i < empaquetadores.length; i++) {
                 if (empaquetadores[i] != null) {
-                    sbE.append("Empaquetador ").append(i + 1).append(": ")
+                    sbE.append(" - Empaquetador ").append(i + 1).append(": ")
                        .append(empaquetadores[i].getEstadoActual()).append("\n");
                 }
             }
             lblEmpaquetadoStatus.setText(sbE.toString());
         }
 
-        // Expedición con HTML y colores
         if (lblExpedicionRutas != null) {
             for (int i = 0; i < 4; i++) {
                 if (lblExpedicionRutas[i] != null) {
-                    lblExpedicionRutas[i].setText(colasExpedicion[i].getResumenHtml(6));
+                    lblExpedicionRutas[i].setText(colasExpedicion[i].getResumenHtml(4));
                 }
             }
         }
 
-        // Repartidores
         if (repartidores != null && lblRepartidorStatus != null && pnlRepartidores != null) {
             for (int i = 0; i < 4; i++) {
                 if (repartidores[i] != null && lblRepartidorStatus[i] != null && pnlRepartidores[i] != null) {
                     EstadoRepartidor est = repartidores[i].getEstadoRepartidor();
-                    lblRepartidorStatus[i].setText(est.name() + " | " + repartidores[i].getCantidadCargada() + "/" + repartidores[i].getCapacidadMax());
+                    lblRepartidorStatus[i].setText(est.name());
+                    lblRepartidorSub[i].setText("Carga: " + repartidores[i].getCantidadCargada() + "/" + repartidores[i].getCapacidadMax() + "  |  " + repartidores[i].getRuta());
+
                     switch (est) {
                         case DISPONIBLE:
-                            pnlRepartidores[i].setBackground(new Color(230, 247, 255));
+                            pnlRepartidores[i].setBackground(new Color(241, 245, 249));
+                            lblRepartidorStatus[i].setForeground(new Color(71, 85, 105));
                             break;
                         case CARGANDO:
-                            pnlRepartidores[i].setBackground(new Color(255, 251, 230));
+                            pnlRepartidores[i].setBackground(new Color(254, 243, 199));
+                            lblRepartidorStatus[i].setForeground(new Color(217, 119, 6));
                             break;
                         case EN_RUTA:
                         case ENTREGANDO:
-                            pnlRepartidores[i].setBackground(new Color(230, 255, 230));
+                            pnlRepartidores[i].setBackground(new Color(209, 250, 229));
+                            lblRepartidorStatus[i].setForeground(new Color(5, 150, 105));
                             break;
                         case REGRESANDO:
-                            pnlRepartidores[i].setBackground(new Color(255, 240, 245));
+                            pnlRepartidores[i].setBackground(new Color(224, 231, 255));
+                            lblRepartidorStatus[i].setForeground(new Color(79, 70, 229));
                             break;
                         default:
-                            pnlRepartidores[i].setBackground(new Color(245, 245, 245));
+                            pnlRepartidores[i].setBackground(new Color(248, 250, 252));
+                            lblRepartidorStatus[i].setForeground(new Color(148, 163, 184));
                             break;
                     }
                 }
@@ -395,23 +482,27 @@ public class VentanaPrincipal extends JFrame {
 
         StringBuilder sb = new StringBuilder();
         sb.append("=========================================\n");
-        sb.append("         📊 ESTADÍSTICAS DEL SISTEMA     \n");
+        sb.append("      PANEL DE RENDIMIENTO LOGÍSTICO     \n");
         sb.append("=========================================\n\n");
-        sb.append(String.format("  Paquetes Generados:      %d\n", generados));
-        sb.append(String.format("  Entregados con Éxito:    %d\n", entregados));
-        sb.append(String.format("  Devueltos (Fallidos):    %d\n", devueltos));
-        sb.append(String.format("  Actualmente en Proceso:  %d\n", Math.max(0, enProceso)));
-        sb.append(String.format("  Tiempo promedio entrega: %.2f s\n\n", promedioSegundos));
+        sb.append(String.format("  - Paquetes Totales Recibidos:  %d\n", generados));
+        sb.append(String.format("  - Entregas Completadas:        %d\n", entregados));
+        sb.append(String.format("  - Paquetes Devueltos:          %d\n", devueltos));
+        sb.append(String.format("  - Actualmente en Circulación:  %d\n", Math.max(0, enProceso)));
+        sb.append(String.format("  - Tiempo Promedio de Entrega:  %.2f seg\n\n", promedioSegundos));
         sb.append("-----------------------------------------\n");
-        sb.append("  Entregas por Repartidor:\n");
+        sb.append("  Rendimiento Individual por Repartidor:\n");
         for (int i = 0; i < 4; i++) {
-            sb.append(String.format("    - Repartidor %d: %d paquetes\n", (i + 1), stats.getPorRepartidor(i)));
+            sb.append(String.format("    - Repartidor %d: %d paquetes entregados\n", (i + 1), stats.getPorRepartidor(i)));
         }
         sb.append("=========================================\n");
 
         JTextArea area = new JTextArea(sb.toString());
         area.setEditable(false);
-        area.setFont(new Font("Monospaced", Font.BOLD, 13));
-        JOptionPane.showMessageDialog(this, new JScrollPane(area), "Panel de Estadísticas", JOptionPane.INFORMATION_MESSAGE);
+        area.setFont(new Font("Consolas", Font.BOLD, 13));
+        area.setBackground(new Color(15, 23, 42));
+        area.setForeground(new Color(56, 189, 248));
+        area.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        JOptionPane.showMessageDialog(this, new JScrollPane(area), "Estadísticas del Sistema", JOptionPane.INFORMATION_MESSAGE);
     }
 }

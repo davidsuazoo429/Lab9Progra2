@@ -40,9 +40,19 @@ public class Stats {
         for (int i = 0; i < 4; i++) porRepartidor[i] = 0;
     }
 
-    public synchronized int getGenerados() { return generados; }
-    public synchronized int getEntregados() { return entregados; }
-    public synchronized int getDevueltos() { return devueltos; }
-    public synchronized long getTiempoTotalMs() { return tiempoTotalMs; }
-    public synchronized int getPorRepartidor(int index) { return porRepartidor[index]; }
+    public synchronized int getGenerados() {
+        return generados; 
+    }
+    public synchronized int getEntregados() {
+        return entregados; 
+    }
+    public synchronized int getDevueltos() {
+        return devueltos; 
+    }
+    public synchronized long getTiempoTotalMs() {
+        return tiempoTotalMs; 
+    }
+    public synchronized int getPorRepartidor(int index) {
+        return porRepartidor[index]; 
+    }
 }

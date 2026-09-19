@@ -34,15 +34,37 @@ public class Paquete {
         this.tiempoCreacion = System.currentTimeMillis();
     }
 
-    public String getCodigo() { return codigo; }
-    public String getCiudad() { return ciudad; }
-    public double getPeso() { return peso; }
-    public Prioridad getPrioridad() { return prioridad; }
-    public EstadoPaquete getEstado() { return estado; }
-    public void setEstado(EstadoPaquete estado) { this.estado = estado; }
-    public String getRutaAsignada() { return rutaAsignada; }
-    public void setRutaAsignada(String rutaAsignada) { this.rutaAsignada = rutaAsignada; }
-    public int getIntentos() { return intentos; }
-    public void incrementarIntentos() { this.intentos++; }
-    public long getTiempoCreacion() { return tiempoCreacion; } 
+    public String getCodigo() {
+        return codigo; 
+    }
+    public String getCiudad() {
+        return ciudad; 
+    }
+    public double getPeso() {
+        return peso; 
+    }
+    public Prioridad getPrioridad() {
+        return prioridad; 
+    }
+    public EstadoPaquete getEstado() {
+        return estado; 
+    }
+    public void setEstado(EstadoPaquete estado) {
+        this.estado = estado; 
+    }
+    public String getRutaAsignada() { 
+        return rutaAsignada; 
+    }
+    public void setRutaAsignada(String rutaAsignada) {
+        this.rutaAsignada = rutaAsignada; 
+    }
+    public int getIntentos() {
+        return intentos;
+    }
+    public void incrementarIntentos() { 
+        this.intentos++; 
+    }
+    public long getTiempoCreacion() {
+        return tiempoCreacion; 
+    } 
 }

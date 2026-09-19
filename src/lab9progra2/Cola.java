@@ -19,7 +19,6 @@ public class Cola {
         this.capacidadMaxima = capacidadMaxima;
     }
 
-    // Inserción ordenada por prioridad estricta
     public synchronized void encolar(Paquete p, Control ctrl) throws InterruptedException {
         while (lista.getTamanio() >= capacidadMaxima && ctrl.isEjecutando()) {
             wait();
@@ -66,11 +65,10 @@ public class Cola {
         return capacidadMaxima;
     }
 
-    // Genera bloques con fondo de color real (HTML compatible con Java Swing)
     public synchronized String getResumenHtml(int maxElementos) {
         StringBuilder sb = new StringBuilder();
-        sb.append("<html><body style='margin:2px; font-family:sans-serif;'>");
-        sb.append("<table cellspacing='3' cellpadding='3'>");
+        sb.append("<html><body style='margin:4px; font-family:Segoe UI, Tahoma, sans-serif; background-color:#FFFFFF;'>");
+        sb.append("<table cellspacing='4' cellpadding='4' width='100%'>");
 
         Nodo<Paquete> actual = lista.cabeza;
         int count = 0;
@@ -79,24 +77,27 @@ public class Cola {
 
             Paquete p = actual.dato;
             String color = p.getPrioridad().getColorHex();
-            String textoColor = (p.getPrioridad() == Prioridad.NORMAL) ? "#000000" : "#FFFFFF";
+            String textoColor = (p.getPrioridad() == Prioridad.NORMAL) ? "#333333" : "#FFFFFF";
 
-            sb.append("<td bgcolor='").append(color).append("' align='center'>")
-              .append("<font color='").append(textoColor).append("' size='2'><b> ")
-              .append(p.getCodigo()).append(" [").append(p.getPrioridad().getTag()).append("] ")
-              .append("</b></font></td>");
+            sb.append("<td bgcolor='").append(color).append("' width='50%' style='padding:5px; border-radius:4px;'>")
+              .append("<font color='").append(textoColor).append("' size='3'><b>")
+              .append(p.getCodigo())
+              .append("</b></font><br>")
+              .append("<font color='").append(textoColor).append("' size='1'>")
+              .append(p.getPrioridad().getNombre()).append(" | ").append(p.getPeso()).append("kg")
+              .append("</font></td>");
 
             count++;
             if (count % 2 == 0) sb.append("</tr>");
             actual = actual.siguiente;
         }
 
-        if (count % 2 != 0) sb.append("<td></td></tr>");
+        if (count % 2 != 0) sb.append("<td width='50%'></td></tr>");
         sb.append("</table>");
 
         if (actual != null) {
-            sb.append("<div style='color:#666666; font-size:9px;'><i>+(")
-              .append(lista.getTamanio() - count).append(" más en cola)</i></div>");
+            sb.append("<div align='center' style='color:#64748B; font-size:10px; margin-top:2px;'><b>+ ")
+              .append(lista.getTamanio() - count).append(" paquetes más en espera</b></div>");
         }
 
         sb.append("</body></html>");

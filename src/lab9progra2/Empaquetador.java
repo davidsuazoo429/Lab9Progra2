@@ -40,8 +40,7 @@ public class Empaquetador extends Thread{
                     p.setEstado(EstadoPaquete.EMPAQUETANDO);
                     estadoActual = "Empaquetando " + p.getCodigo();
 
-                    // ⏱️ Tiempos pausados según peso: ≤2kg: 3s | 2-5kg: 4.5s | >5kg: 6s
-                    long tiempoMs = (p.getPeso() <= 2.0) ? 3000 : (p.getPeso() <= 5.0 ? 4500 : 6000);
+                    long tiempoMs = (p.getPeso() <= 2.0) ? 1500 : (p.getPeso() <= 5.0 ? 2300 : 3200);
                     Thread.sleep(tiempoMs);
 
                     p.setEstado(EstadoPaquete.EMPAQUETADO);

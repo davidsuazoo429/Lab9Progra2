@@ -27,8 +27,16 @@ public enum Prioridad {
         this.colorHex = colorHex;
     }
 
-    public int getValor() { return valor; }
-    public String getTag() { return tag; }
-    public String getNombre() { return nombre; }
-    public String getColorHex() { return colorHex; }
+    public int getValor() {
+        return valor; 
+    }
+    public String getTag() {
+        return tag; 
+    }
+    public String getNombre() {
+        return nombre; 
+    }
+    public String getColorHex() {
+        return colorHex; 
+    }
 }

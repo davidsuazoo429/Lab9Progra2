@@ -14,8 +14,12 @@ public class Control {
     private volatile boolean pausado = false;
     private final Object lock = new Object();
 
-    public boolean isEjecutando() { return ejecutando; }
-    public boolean isPausado() { return pausado; }
+    public boolean isEjecutando() {
+        return ejecutando; 
+    }
+    public boolean isPausado() { 
+        return pausado; 
+    }
 
     public void iniciar() {
         ejecutando = true;
