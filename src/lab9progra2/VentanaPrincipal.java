@@ -480,29 +480,153 @@ public class VentanaPrincipal extends JFrame {
                 ? (double) stats.getTiempoTotalMs() / (entregados * 1000.0)
                 : 0.0;
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("=========================================\n");
-        sb.append("      PANEL DE RENDIMIENTO LOGISTICO     \n");
-        sb.append("=========================================\n\n");
-        sb.append(String.format("  - Paquetes Totales Recibidos:  %d\n", generados));
-        sb.append(String.format("  - Entregas Completadas:        %d\n", entregados));
-        sb.append(String.format("  - Paquetes Devueltos:          %d\n", devueltos));
-        sb.append(String.format("  - Actualmente en Circulación:  %d\n", Math.max(0, enProceso)));
-        sb.append(String.format("  - Tiempo Promedio de Entrega:  %.2f seg\n\n", promedioSegundos));
-        sb.append("-----------------------------------------\n");
-        sb.append("  Rendimiento Individual por Repartidor:\n");
+        JDialog dialog = new JDialog(this, "Estadísticas del Sistema", true);
+        dialog.setSize(520, 600);
+        dialog.setLocationRelativeTo(this);
+        dialog.setLayout(new BorderLayout());
+        dialog.getContentPane().setBackground(new Color(241, 245, 249));
+
+        JPanel pnlHeaderModal = new JPanel(new BorderLayout());
+        pnlHeaderModal.setBackground(new Color(15, 23, 42));
+        pnlHeaderModal.setBorder(new EmptyBorder(15, 20, 15, 20));
+
+        JLabel lblTituloModal = new JLabel("PANEL DE RENDIMIENTO LOGÍSTICO");
+        lblTituloModal.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        lblTituloModal.setForeground(Color.WHITE);
+
+        JLabel lblSubModal = new JLabel("Métricas operativas del centro de distribución");
+        lblSubModal.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        lblSubModal.setForeground(new Color(148, 163, 184));
+
+        pnlHeaderModal.add(lblTituloModal, BorderLayout.NORTH);
+        pnlHeaderModal.add(lblSubModal, BorderLayout.SOUTH);
+        dialog.add(pnlHeaderModal, BorderLayout.NORTH);
+
+        JPanel pnlContenido = new JPanel();
+        pnlContenido.setLayout(new BoxLayout(pnlContenido, BoxLayout.Y_AXIS));
+        pnlContenido.setOpaque(false);
+        pnlContenido.setBorder(new EmptyBorder(15, 18, 15, 18));
+
+        JPanel pnlKPIs = new JPanel(new GridLayout(2, 2, 10, 10));
+        pnlKPIs.setOpaque(false);
+        pnlKPIs.setMaximumSize(new Dimension(480, 150));
+
+        pnlKPIs.add(crearCardKPI("Recibidos", String.valueOf(generados), new Color(59, 130, 246)));
+        pnlKPIs.add(crearCardKPI("Entregados", String.valueOf(entregados), new Color(16, 185, 129)));
+        pnlKPIs.add(crearCardKPI("Devueltos", String.valueOf(devueltos), new Color(239, 68, 68)));
+        pnlKPIs.add(crearCardKPI("En Proceso", String.valueOf(Math.max(0, enProceso)), new Color(245, 158, 11)));
+        pnlContenido.add(pnlKPIs);
+
+        pnlContenido.add(Box.createVerticalStrut(10));
+
+        JPanel cardTiempo = new JPanel(new BorderLayout());
+        cardTiempo.setBackground(Color.WHITE);
+        cardTiempo.setMaximumSize(new Dimension(480, 45));
+        cardTiempo.setBorder(new CompoundBorder(
+                new LineBorder(new Color(226, 232, 240), 1, true),
+                new EmptyBorder(8, 15, 8, 15)
+        ));
+        JLabel lblTiempoTitulo = new JLabel("Tiempo Promedio por Entrega");
+        lblTiempoTitulo.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        lblTiempoTitulo.setForeground(new Color(71, 85, 105));
+
+        JLabel lblTiempoValor = new JLabel(String.format("%.2f s", promedioSegundos));
+        lblTiempoValor.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        lblTiempoValor.setForeground(new Color(99, 102, 241));
+
+        cardTiempo.add(lblTiempoTitulo, BorderLayout.WEST);
+        cardTiempo.add(lblTiempoValor, BorderLayout.EAST);
+        pnlContenido.add(cardTiempo);
+
+        pnlContenido.add(Box.createVerticalStrut(12));
+
+        JPanel cardRepartidores = new JPanel();
+        cardRepartidores.setLayout(new BoxLayout(cardRepartidores, BoxLayout.Y_AXIS));
+        cardRepartidores.setBackground(Color.WHITE);
+        cardRepartidores.setBorder(new CompoundBorder(
+                new LineBorder(new Color(226, 232, 240), 1, true),
+                new EmptyBorder(10, 15, 10, 15)
+        ));
+
+        JLabel lblRepartidoresTitulo = new JLabel("Entregas Individuales por Repartidor");
+        lblRepartidoresTitulo.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        lblRepartidoresTitulo.setForeground(new Color(30, 41, 59));
+        lblRepartidoresTitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        cardRepartidores.add(lblRepartidoresTitulo);
+        cardRepartidores.add(Box.createVerticalStrut(8));
+
+        int maxEntregas = 1;
         for (int i = 0; i < 4; i++) {
-            sb.append(String.format("    - Repartidor %d: %d paquetes entregados\n", (i + 1), stats.getPorRepartidor(i)));
+            if (stats.getPorRepartidor(i) > maxEntregas) {
+                maxEntregas = stats.getPorRepartidor(i);
+            }
         }
-        sb.append("=========================================\n");
 
-        JTextArea area = new JTextArea(sb.toString());
-        area.setEditable(false);
-        area.setFont(new Font("Consolas", Font.BOLD, 13));
-        area.setBackground(new Color(15, 23, 42));
-        area.setForeground(new Color(56, 189, 248));
-        area.setBorder(new EmptyBorder(10, 10, 10, 10));
+        for (int i = 0; i < 4; i++) {
+            int ent = stats.getPorRepartidor(i);
+            JPanel fila = new JPanel(new BorderLayout(8, 0));
+            fila.setOpaque(false);
+            fila.setMaximumSize(new Dimension(450, 22));
 
-        JOptionPane.showMessageDialog(this, new JScrollPane(area), "Estadísticas del Sistema", JOptionPane.INFORMATION_MESSAGE);
+            JLabel lblNombre = new JLabel("Repartidor " + (i + 1));
+            lblNombre.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+            lblNombre.setPreferredSize(new Dimension(95, 20));
+
+            JProgressBar barMini = new JProgressBar(0, maxEntregas);
+            barMini.setValue(ent);
+            barMini.setForeground(new Color(16, 185, 129));
+            barMini.setBackground(new Color(241, 245, 249));
+            barMini.setBorder(new LineBorder(new Color(226, 232, 240), 1, true));
+
+            JLabel lblCant = new JLabel(ent + " paquetes");
+            lblCant.setFont(new Font("Segoe UI", Font.BOLD, 11));
+            lblCant.setForeground(new Color(71, 85, 105));
+            lblCant.setPreferredSize(new Dimension(80, 20));
+
+            fila.add(lblNombre, BorderLayout.WEST);
+            fila.add(barMini, BorderLayout.CENTER);
+            fila.add(lblCant, BorderLayout.EAST);
+
+            cardRepartidores.add(fila);
+            if (i < 3) cardRepartidores.add(Box.createVerticalStrut(6));
+        }
+        pnlContenido.add(cardRepartidores);
+
+        dialog.add(pnlContenido, BorderLayout.CENTER);
+
+        JPanel pnlFooter = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 12));
+        pnlFooter.setBackground(new Color(248, 250, 252));
+        pnlFooter.setBorder(new CompoundBorder(
+                BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(226, 232, 240)),
+                new EmptyBorder(0, 0, 0, 0)
+        ));
+
+        JButton btnCerrar = crearBotonModerno("Cerrar", new Color(71, 85, 105));
+        btnCerrar.addActionListener(e -> dialog.dispose());
+        pnlFooter.add(btnCerrar);
+        dialog.add(pnlFooter, BorderLayout.SOUTH);
+
+        dialog.setVisible(true);
+    }
+
+    private JPanel crearCardKPI(String titulo, String valor, Color colorAcento) {
+        JPanel card = new JPanel(new BorderLayout(4, 4));
+        card.setBackground(Color.WHITE);
+        card.setBorder(new CompoundBorder(
+                new LineBorder(new Color(226, 232, 240), 1, true),
+                new EmptyBorder(8, 12, 8, 12)
+        ));
+
+        JLabel lblTit = new JLabel(titulo);
+        lblTit.setFont(new Font("Segoe UI", Font.BOLD, 11));
+        lblTit.setForeground(new Color(100, 116, 139));
+
+        JLabel lblVal = new JLabel(valor);
+        lblVal.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lblVal.setForeground(colorAcento);
+
+        card.add(lblTit, BorderLayout.NORTH);
+        card.add(lblVal, BorderLayout.CENTER);
+        return card;
     }
 }
